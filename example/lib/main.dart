@@ -122,7 +122,7 @@ class _MyAppState extends State<MyApp> {
               ),
               Visibility(
                 visible: showNativeAdView,
-                child: Pangolin.NativeAdWidgetView(posID: "945298711"),
+                child: Pangolin.NativeAdFixedView(posID: "945298711",),
                 replacement: Container(),
               ),
               FlatButton(

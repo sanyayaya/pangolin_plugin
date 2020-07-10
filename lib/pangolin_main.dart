@@ -194,11 +194,16 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
 
 class NativeAdWidgetView extends StatefulWidget {
   const NativeAdWidgetView(
-      {Key key, @required this.posID, this.decoration, this.nativeAdheight})
+      {Key key,
+      @required this.posID,
+      this.decoration,
+      this.ratio = 0.85,
+      this.nativeAdheight})
       : super(key: key);
   final String posID;
   final Decoration decoration;
   final double nativeAdheight;
+  final double ratio;
   @override
   _NativeAdWidgetViewState createState() => _NativeAdWidgetViewState();
 }
@@ -209,7 +214,7 @@ class _NativeAdWidgetViewState extends State<NativeAdWidgetView> {
   Widget build(BuildContext context) {
     final successHeight = widget.nativeAdheight != null
         ? widget.nativeAdheight
-        : MediaQuery.of(context).size.width * 0.85;
+        : MediaQuery.of(context).size.width * widget.ratio;
     return Container(
       decoration: widget.decoration,
       height: height,
@@ -223,6 +228,22 @@ class _NativeAdWidgetViewState extends State<NativeAdWidgetView> {
             }
           }),
     );
+  }
+}
+
+class NativeAdFixedView extends StatelessWidget {
+  const NativeAdFixedView(
+      {@required this.posID, this.decoration, this.ratio = 0.85});
+  final String posID;
+  final double ratio;
+  final Decoration decoration;
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.width * ratio;
+    return Container(
+        decoration: decoration,
+        height: height,
+        child: NativeAdWidget(posID: posID));
   }
 }
 
