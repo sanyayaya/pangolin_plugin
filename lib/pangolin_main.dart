@@ -233,14 +233,16 @@ class _NativeAdWidgetViewState extends State<NativeAdWidgetView> {
 
 class NativeAdFixedView extends StatelessWidget {
   const NativeAdFixedView(
-      {@required this.posID, this.decoration, this.ratio = 0.85});
+      {@required this.posID, this.decoration, this.ratio = 0.85, this.padding});
   final String posID;
   final double ratio;
   final Decoration decoration;
+  final EdgeInsetsGeometry padding;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.width * ratio;
     return Container(
+        padding: padding,
         decoration: decoration,
         height: height,
         child: NativeAdWidget(posID: posID));
