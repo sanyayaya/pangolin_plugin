@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             debug: false,
             supportMultiProcess: true)
         .then((v) {
-      _loadSplashAd();
+      // _loadSplashAd();
       setState(() {
         showNativeAdView = true;
       });
@@ -102,37 +102,60 @@ class _MyAppState extends State<MyApp> {
       // }
     }
     return MaterialApp(
+      showPerformanceOverlay: true,
+      checkerboardOffscreenLayers: true, // 使用了saveLayer的图形会显示为棋盘格式并随着页面刷新而闪烁
+      checkerboardRasterCacheImages: true,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
         body: Center(
           child: Center(
-              child: Column(
-            children: <Widget>[
-              Visibility(
-                visible: showNativeAdView,
-                child: Pangolin.NativeAdWidgetView(
-                  posID: "945298711",
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(width: 1, color: Colors.red))),
-                ),
-                replacement: Container(),
+              child: Visibility(
+            visible: showNativeAdView,
+            child: ListView.builder(
+                itemCount: 20,
+                cacheExtent: 600,
+                itemBuilder: (ctx, index) {
+                  return Visibility(
+                    visible: index % 3 == 0,
+                    child: Pangolin.NativeAdFixedView(
+                      posID: "945298711",
+                    ),
+                    replacement: Container(
+                      color: Colors.green,
+                      height: 300,
+                    ),
+                  );
+                }),
+            replacement: Container(),
+          )
+              //     Column(
+              //   children: <Widget>[
+              //     Visibility(
+              //       visible: showNativeAdView,
+              //       child: Pangolin.NativeAdWidgetView(
+              //         posID: "945298711",
+              //         decoration: BoxDecoration(
+              //             border: Border(
+              //                 bottom: BorderSide(width: 1, color: Colors.red))),
+              //       ),
+              //       replacement: Container(),
+              //     ),
+              //     Visibility(
+              //       visible: showNativeAdView,
+              //       child: Pangolin.NativeAdFixedView(posID: "945298711",),
+              //       replacement: Container(),
+              //     ),
+              //     FlatButton(
+              //       onPressed: () {
+              //         _loadRewardAd();
+              //       },
+              //       child: Text("Pangolin"),
+              //     ),
+              //   ],
+              // )
               ),
-              Visibility(
-                visible: showNativeAdView,
-                child: Pangolin.NativeAdFixedView(posID: "945298711",),
-                replacement: Container(),
-              ),
-              FlatButton(
-                onPressed: () {
-                  _loadRewardAd();
-                },
-                child: Text("Pangolin"),
-              ),
-            ],
-          )),
         ),
       ),
     );

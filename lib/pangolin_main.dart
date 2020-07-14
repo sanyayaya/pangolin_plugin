@@ -92,29 +92,22 @@ Future _methodHandler(MethodCall methodCall) {
   return Future.value();
 }
 
-class NativeAdWidget extends StatefulWidget {
-  const NativeAdWidget({Key key, @required this.posID, this.adEventCallback})
+class NativeAdWidget extends StatelessWidget {
+  NativeAdWidget({Key key, @required this.posID, this.adEventCallback})
       : super(key: key);
   final String posID;
   final NativeADEventCallback adEventCallback;
   @override
-  _NativeAdWidgetState createState() => _NativeAdWidgetState();
-}
-
-class _NativeAdWidgetState extends State<NativeAdWidget> {
-  final viewType = "com.tongyangsheng.pangolin/nativeAdView";
-  double height = 0;
-  double width = 0;
-  MethodChannel _methodChannel;
-  @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
+    final viewType = "com.tongyangsheng.pangolin/nativeAdView";
     if (Platform.isAndroid) {
-      return AndroidView(
-        viewType: viewType,
-        onPlatformViewCreated: _onPlatformViewCreated,
-        // creationParams: {'posID': widget.posID},
-        creationParamsCodec: StandardMessageCodec(),
+      return RepaintBoundary(
+        child: AndroidView(
+          viewType: viewType,
+          onPlatformViewCreated: _onPlatformViewCreated,
+          // creationParams: {'posID': widget.posID},
+          creationParamsCodec: StandardMessageCodec(),
+        ),
       );
     } else if (Platform.isIOS) {
       return UiKitView(
@@ -128,17 +121,20 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
   }
 
   void _onPlatformViewCreated(int id) {
+    MethodChannel _methodChannel;
     final String methodChannelName = 'pangolin_native_$id';
     // print('------------------------------');
     // print(methodChannelName);
     // print('------------------------------');
-    this._methodChannel = MethodChannel(methodChannelName);
-    this._methodChannel.setMethodCallHandler(_handleMethodCall);
-    this.refreshAD();
+    _methodChannel = MethodChannel(methodChannelName);
+    _methodChannel.setMethodCallHandler(_handleMethodCall);
+    if (_methodChannel != null) {
+      _methodChannel.invokeMethod('refresh', posID);
+    }
   }
 
   Future<void> _handleMethodCall(MethodCall call) async {
-    if (widget.adEventCallback != null) {
+    if (adEventCallback != null) {
       NativeADEvent event;
       switch (call.method) {
         case 'onLayoutChange':
@@ -175,19 +171,7 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
           event = NativeADEvent.onADCloseOverlay;
           break;
       }
-      widget.adEventCallback(event, call.arguments);
-    }
-  }
-
-  Future<void> closeAD() async {
-    if (_methodChannel != null) {
-      await _methodChannel.invokeMethod('close');
-    }
-  }
-
-  Future<void> refreshAD() async {
-    if (_methodChannel != null) {
-      await _methodChannel.invokeMethod('refresh', widget.posID);
+      adEventCallback(event, call.arguments);
     }
   }
 }
