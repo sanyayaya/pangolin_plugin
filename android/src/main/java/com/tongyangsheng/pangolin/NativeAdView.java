@@ -55,10 +55,10 @@ public class NativeAdView implements PlatformView, MethodCallHandler {
     @Override
     public void dispose() {
 //        methodChannel.setMethodCallHandler(null);
-//        if (ttNativeExpressAd != null) {
-//            //调用destroy()方法释放
-//            ttNativeExpressAd.destroy();
-//        }
+        if (ttNativeExpressAd != null) {
+            //调用destroy()方法释放
+            ttNativeExpressAd.destroy();
+        }
     }
 
     public void loadNativeAd () {
