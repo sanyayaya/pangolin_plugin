@@ -54,11 +54,11 @@ public class NativeAdView implements PlatformView, MethodCallHandler {
 
     @Override
     public void dispose() {
-        methodChannel.setMethodCallHandler(null);
-        if (ttNativeExpressAd != null) {
-            //调用destroy()方法释放
-            ttNativeExpressAd.destroy();
-        }
+//        methodChannel.setMethodCallHandler(null);
+//        if (ttNativeExpressAd != null) {
+//            //调用destroy()方法释放
+//            ttNativeExpressAd.destroy();
+//        }
     }
 
     public void loadNativeAd () {
@@ -92,24 +92,24 @@ public class NativeAdView implements PlatformView, MethodCallHandler {
         ad.setExpressInteractionListener(new TTNativeExpressAd.ExpressAdInteractionListener() {
             @Override
             public void onAdClicked(View view, int i) {
-                methodChannel.invokeMethod("onAdClicked", null);
+//                methodChannel.invokeMethod("onAdClicked", null);
             }
 
             @Override
             public void onAdShow(View view, int i) {
-                methodChannel.invokeMethod("onAdShow", null);
+//                methodChannel.invokeMethod("onAdShow", null);
             }
 
             @Override
             public void onRenderFail(View view, String s, int i) {
-                methodChannel.invokeMethod("onRenderFail", null);
+//                methodChannel.invokeMethod("onRenderFail", null);
             }
 
             @Override
             public void onRenderSuccess(View view, float v, float v1) {
                 nativeViewContainer.removeAllViews();
                 nativeViewContainer.addView(view);
-                methodChannel.invokeMethod("onRenderSuccess", null);
+//                methodChannel.invokeMethod("onRenderSuccess", null);
             }
         });
     }
