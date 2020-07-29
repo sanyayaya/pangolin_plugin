@@ -101,12 +101,13 @@ class NativeAdWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewType = "com.tongyangsheng.pangolin/nativeAdView";
     if (Platform.isAndroid) {
-      return AndroidView(
+      return RepaintBoundary(
+          child: AndroidView(
         viewType: viewType,
         onPlatformViewCreated: _onPlatformViewCreated,
         // creationParams: {'posID': widget.posID},
         creationParamsCodec: StandardMessageCodec(),
-      );
+      ));
     } else if (Platform.isIOS) {
       return UiKitView(
         viewType: viewType,
